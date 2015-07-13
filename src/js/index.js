@@ -9,7 +9,7 @@ var defaultOptions = {'name': true, 'stats': true, 'abilities': true};
 // ASCII taken from http://www.asciiartfarts.com/pokemon.html
 
 console.log(
-'	                                .::.                       \n',
+'                                   .::.                       \n',
 '                              .;:**"            AMC           \n',
 '                              `                  0            \n',
 '  .:XHHHHk.              db.   .;;.     dH  MX   0            \n',
