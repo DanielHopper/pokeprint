@@ -22,8 +22,10 @@
   },
   "homepage": "https://github.com/DanielHopper/pokeprint",
   "dependencies": {
+    "colors": "^1.1.2",
     "commander": "^2.8.1",
     "express": "^4.13.1",
-    "request": "^2.58.0"
+    "request": "^2.58.0",
+    "underscore": "^1.8.3"
   }
 }
