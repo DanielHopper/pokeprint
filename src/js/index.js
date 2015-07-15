@@ -6,7 +6,7 @@ var program = require('commander');
 var request = require('request');
 var poke = require('./pokelist');
 
-var defaultOptions = {'stats': true, 'abilities': true};
+var defaultOptions = {'stats': true, 'abilities': true, 'type': true};
 
 
 
@@ -30,10 +30,11 @@ console.log(
 '               Gotta try {...} catch () {...} em all!         \n');
 
 
-var pokeStats = function (body) {
+var pokeStats = function (pkmn) {
 
 	var stats = ['hp', 'attack', 'defense', 'sp_atk', 'sp_def', 'speed'];
-	var pkmn = JSON.parse(body);
+
+	// include stat calculation for specific levels
 
 
 	for (var i in stats) {
@@ -55,15 +56,16 @@ var pokeStats = function (body) {
 	}
 };
 
-var pokeAbilities = function (body) {
+var pokeAbilities = function (pkmn) {
 
 	// ability printing
 
 };
 
-var pokeBreeding = function (body) {
+var pokeType = function (pkmn) {
 
-	// breeding info printing
+	console.log("Type 1: " + pkmn.types[0].name.toUpperCase().white.bgGreen +
+				" Type 2: " + pkmn.types[1].name.toUpperCase().white.bgBlue );
 
 };
 
@@ -73,9 +75,9 @@ var pokePrint = function (body, options) {
 	options = options || defaultOptions;
 
 	console.log(pkmn.name);
-	options.stats && pokeStats(body);
-	options.abilities && pokeAbilities(body);
-	options.breeding && pokeBreeding(body);
+	options.type && pokeType(pkmn);
+	options.abilities && pokeAbilities(pkmn);
+	options.stats && pokeStats(pkmn, options); //will handle levels, IVs, EVs
 
 	// etc...
 
@@ -100,14 +102,20 @@ var options = {};
 program
 	.version('1.0.0')
 	.usage("[options] <pokemon>")
-	.option("-s, --stats", "Display stats of specified pokemon")
-	.option("-a, --abilities", "Display abilities of specified pokemon")
-	.option("-b, --breeding", "Display information about specified pokemon relevant to breeding")
+	.option("-s --stats", "Display stats of specified pokemon")
+	.option("-a --abilities", "Display the abilities of the specified")
+	.option("-L --level <number>", "Base stats off a pokemon at this level (default is 100)", /^[1-100]$/i, "100")
+	.option("-t --type", "Display the specified pokemon's type, along with it's effectiveness on other types")
+	.option("-I --IV", "Gives interactive mode for IV selecting (default no IVs)")
+	.option("-E --EV", "Gives interactive mode for IV selecting (default perfect EVs")
 	.parse(process.argv);
 
 if (program.stats) options = _.extend(options, {'stats': true});
 if (program.abilities) options = _.extend(options, {'abilities': true});
-if (program.breeding) options = _.extend(options, {'breeding': true});
+if (program.level) options = _.extend(options, {'withLevel': true, 'level': program.level});
+if (program.type) options = _.extend(options, {'type': true});
+if (program.IV) options = _.extend(options, {'IVMode': true});
+if (program.EV) options = _.extend(options, {'EVMode': true});
 
 
 getPokemon(poke.dex.indexOf(program.args[0]) + 1, options);
